@@ -1,0 +1,41 @@
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ i386-watchos-simulator, x86_64-watchos-simulator, arm64-watchos-simulator ]
+install-name:    '/System/Library/Frameworks/UIKit.framework/UIKit'
+swift-abi-version: 7
+reexported-libraries:
+  - targets:         [ i386-watchos-simulator, x86_64-watchos-simulator, arm64-watchos-simulator ]
+    libraries:       [ '/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore' ]
+exports:
+  - targets:         [ i386-watchos-simulator, x86_64-watchos-simulator, arm64-watchos-simulator ]
+    symbols:              [ _UIApplicationMain ]
+    objc-classes:         [ UIResponder ]
+    objc-ivars:           [  ]
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ i386-watchos-simulator, x86_64-watchos-simulator, arm64-watchos-simulator ]
+install-name:    '/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore'
+swift-abi-version: 7
+exports:
+  - targets:         [ i386-watchos-simulator, x86_64-watchos-simulator, arm64-watchos-simulator ]
+    symbols:              [  ]
+    objc-classes:         [       UIBarButtonItem,
+      UICollectionReusableView,
+      UICollectionView,
+      UICollectionViewCell,
+      UICollectionViewCellRegistration,
+      UICollectionViewController,
+      UIColor,
+      UIGestureRecognizer,
+      UIListContentConfiguration,
+      UILongPressGestureRecognizer,
+      UISceneConfiguration,
+      UISceneConnectionOptions,
+      UISceneSession,
+      UIScrollView,
+      UITapGestureRecognizer,
+      UIView,
+      UIViewController,
+      UIWindow ]
+    objc-ivars:           [  ]
+...

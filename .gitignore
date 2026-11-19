@@ -1,0 +1,19 @@
+# Xcode local state and build products
+.DS_Store
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xcresult
+*.app
+*.ipa
+*.dSYM/
+*.xcarchive/
+
+# Local signing material
+*.mobileprovision
+*.provisionprofile
+*.p12
+*.p8
+*.pem
+*.cer

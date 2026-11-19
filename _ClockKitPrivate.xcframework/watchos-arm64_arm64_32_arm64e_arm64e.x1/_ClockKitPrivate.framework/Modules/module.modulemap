@@ -1,0 +1,5 @@
+framework module _ClockKitPrivate {
+    umbrella header "_ClockKitPrivate.h"
+    export *
+    module * { export * }
+}
