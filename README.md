@@ -4,6 +4,10 @@
 
 Face Lab 是一款开源 watchOS 应用，用于浏览和全屏显示 Apple Watch 上的表盘。它通过 watchOS 的系统渲染器呈现设备内置的表盘样式，提供分类、预览和切换，并在手表上记住所选样式。
 
+[![Face Lab 应用内表盘预览，包含 Solar Dial、Hermès 和 Numerals Duo](docs/images/face-gallery.png)](docs/images/face-gallery.png)
+
+应用内原始截图 · [Solar Dial](docs/images/solar-dial.png) · [Hermès](docs/images/hermes.png) · [Numerals Duo](docs/images/numerals-duo.png)
+
 ## 快速开始
 
 需要一台装有 Xcode 和 watchOS SDK 的 Mac。使用模拟器时，在 Xcode 中安装对应的 watchOS 模拟器运行时。
