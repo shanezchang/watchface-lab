@@ -1,16 +1,20 @@
 # Watch Face Lab
 
-<img src="Clocky/Assets.xcassets/AppIcon.appiconset/FaceLab-Plates.png" alt="Face Lab 图标" width="80">
+<img src="Clocky/Assets.xcassets/AppIcon.appiconset/FaceLab-Plates.png" alt="Face Lab 应用图标" width="80">
 
-Face Lab 是一个 watchOS 表盘显示实验。打开应用会全屏显示手表已有的表盘，默认是黑底橙字的 Hermès 款，长按可选其他款。选择保存在应用自己的偏好中。
+Face Lab 是一款开源 watchOS 应用，用于浏览和全屏显示 Apple Watch 上的表盘。它通过 watchOS 的系统渲染器呈现设备内置的表盘样式，提供分类、预览和切换，并在手表上记住所选样式。
 
-表盘由 watchOS 的 `NanoTimeKit` 等私有系统框架实时绘制，显示范围是 Face Lab 的前台界面。应用通过 Xcode 的常规开发签名安装，渲染兼容性取决于 watchOS 版本和手表上的表盘资源。
+## 快速开始
 
-Apple 的系统表盘支持在已有模板上定制、共享和加入 WidgetKit 复杂功能。原生 Hermès 表盘的可用性由 Apple 按设备决定。 [定制系统表盘](https://support.apple.com/en-ie/guide/watch/apda6559ad78/watchos) · [添加共享表盘](https://developer.apple.com/documentation/clockkit/clkwatchfacelibrary/addwatchface%28at%3Acompletionhandler%3A%29)
+需要一台装有 Xcode 和 watchOS SDK 的 Mac。使用模拟器时，在 Xcode 中安装对应的 watchOS 模拟器运行时。
 
-## 从源码运行
+```sh
+git clone https://github.com/shanezchang/watchface-lab.git
+cd watchface-lab
+open FaceLab.xcodeproj
+```
 
-使用带 watchOS SDK 的 Xcode。打开 `FaceLab.xcodeproj`，选择 `FaceLab` scheme 和 Apple Watch 模拟器，然后运行。也可以先检查命令行构建。
+在 Xcode 中选择 `FaceLab` scheme，选中一个 Apple Watch 模拟器并运行。也可以在仓库根目录直接构建模拟器版本。
 
 ```sh
 xcodebuild -project FaceLab.xcodeproj -scheme FaceLab -configuration Debug \
@@ -18,41 +22,46 @@ xcodebuild -project FaceLab.xcodeproj -scheme FaceLab -configuration Debug \
   -derivedDataPath build/simulator CODE_SIGNING_ALLOWED=NO build
 ```
 
-## 在 Series 7 上安装
+### 安装到 Apple Watch
 
-1. 在 Xcode 中登录自己的 Apple 账号。在 Device Hub 确认手表已配对、解锁并启用开发者模式。 [Apple 的设备配对说明](https://developer.apple.com/documentation/xcode/pairing-your-devices-with-your-mac)
-2. 用 `xcodebuild -project FaceLab.xcodeproj -scheme FaceLab -showdestinations` 找到手表的 Xcode `id`。用 `xcrun devicectl list devices` 找到同一块表的 CoreDevice `Identifier`。
-3. 把下面的四个占位值替换为你自己的值。`team` 是 Xcode 签名团队 ID，`bundle` 是该团队下的独立包名。Series 7 的构建用 `arm64_32`。
+1. 在 Xcode 中登录 Apple 账号。用 Device Hub 配对手表和伴侣 iPhone，并按提示启用开发者模式。 [设备配对](https://developer.apple.com/documentation/xcode/pairing-your-devices-with-your-mac) · [开发者模式](https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device)
+2. 在 `FaceLab` target 的 **Signing & Capabilities** 中开启自动签名，选择自己的 Team，并设置该团队可用的 Bundle Identifier。
+3. 选择配对后的 Apple Watch 作为运行目标，在 Xcode 中运行。安装完成后，可在手表的应用列表打开 **Face Lab**。
 
-```sh
-team='YOUR_TEAM_ID'
-bundle='org.example.watchfacelab'
-watch_udid='YOUR_XCODE_WATCH_ID'
-watch_id='YOUR_COREDEVICE_IDENTIFIER'
+通过 Personal Team 安装的开发版本需要定期重新签名。更新现有安装时，沿用原 Team 和 Bundle Identifier。终端操作可按[真机安装流程](.agents/skills/watch-face-lab/SKILL.md#physical-apple-watch)执行。 [Apple 开发者账号说明](https://developer.apple.com/help/account/basics/about-your-developer-account/)
 
-xcodebuild -project FaceLab.xcodeproj -scheme FaceLab -configuration Debug \
-  -destination "platform=watchOS,arch=arm64_32,id=$watch_udid" \
-  -destination-timeout 45 -derivedDataPath build/watch \
-  -allowProvisioningUpdates "DEVELOPMENT_TEAM=$team" \
-  "PRODUCT_BUNDLE_IDENTIFIER=$bundle" ARCHS=arm64_32 EXCLUDED_ARCHS= \
-  ONLY_ACTIVE_ARCH=NO build
+## 使用 Face Lab
 
-app='build/watch/Build/Products/Debug-watchos/FaceLab.app'
-codesign --verify --deep --strict "$app"
-xcrun lipo -archs "$app/FaceLab"
-xcrun devicectl device install app --device "$watch_id" "$app"
-xcrun devicectl device process launch --device "$watch_id" "$bundle"
-```
+1. 打开 Face Lab，长按当前表盘进入 **Categories**。
+2. 选择分类并浏览预览，轻点要使用的表盘。
+3. Face Lab 会在下次启动时尝试恢复该选择。首次启动时优先展示设备可用的黑底橙字 Hermès 款。
 
-安装后可以直接在表上按表冠打开 **Face Lab**。开发描述文件的期限以 `.app` 中的 `embedded.mobileprovision` 为准。到期后，用相同团队和包名重签安装。
+## 运行范围与兼容性
 
-## 已验证环境
+Face Lab 的浏览和显示都发生在应用内。Apple Watch 的系统表盘通过系统提供的表盘图库管理。 [Apple 表盘图库](https://support.apple.com/en-ie/guide/watch/apda6559ad78/watchos)
 
-- Xcode 27.2，Series 7 模拟器，watchOS 26.5。首次启动显示黑底橙字款，UI 测试通过长按、进入 Hermès 分类及选择表盘。用相同包名从 Clocky 原型更新到 Face Lab 后，已保存的选择仍可读取和显示。
-- Xcode 27.2，Series 7 真机，watchOS 26.6。Face Lab 1.0（构建 3）通过 `arm64_32` 构建和开发签名，按同一包名更新到手表。设备确认新版已安装并启动，应用内表盘已在同一台手表上完成显示验证。
+项目调用 `NanoTimeKit` 等 watchOS 私有系统框架。可选表盘取决于设备自带的资源，系统升级也可能改变私有接口的行为。真机构建应采用 Xcode 为目标设备列出的架构，例如 Series 7 使用 `arm64_32`。
 
-## 源码与许可
+## 项目结构
 
-- 渲染和切换逻辑来自 Jinwoo Kim（`pookjw`）的 Clocky 1.1.2，固定在 `88be58720bd0c60f64a6e8265c933b4a0c39d2bb`。上游 README 将创意归功于 `mightywhite` 提交给 HermesEnabler 的 PR #93。Face Lab 的构建输入是 Clocky 的手表端源码、接口声明与 Xcode SDK。 [Clocky 上游 README](https://github.com/pookjw/Clocky/blob/88be58720bd0c60f64a6e8265c933b4a0c39d2bb/README.md)
-- 2026-11-19 将工程整理为独立的 watchOS 应用，补充 Series 7 架构，设置应用内默认款，移除启动时主动请求运动数据的逻辑。五个 `.xcframework` 目录存放文本头文件和链接存根，运行时使用设备上的 Apple 框架。表盘图形直接由系统显示。
-- 本仓库沿用上游的 [GNU GPL v3](LICENSE)。表盘和框架中的第三方品牌及素材归各权利人所有。
+| 路径 | 用途 |
+| --- | --- |
+| [`Clocky/`](Clocky/) | watchOS 应用代码、表盘分类、设备端偏好与图标资源 |
+| [`FaceLab.xcodeproj/`](FaceLab.xcodeproj/) | 独立 watchOS target 和共享 scheme |
+| `*.xcframework/` | 构建所需的接口声明和链接存根，运行时实现由 watchOS 提供 |
+
+## AI 助手
+
+仓库根目录提供 [`AGENTS.md`](AGENTS.md)。配套的 [`watch-face-lab` Skill](.agents/skills/watch-face-lab/SKILL.md) 给出了模拟器运行、真机签名安装和故障排查步骤。可以把仓库链接和下面这样的任务交给你的 AI 助手。
+
+> 读取仓库的 AGENTS.md 和 watch-face-lab Skill，在本机选一个可用的 Apple Watch 模拟器，构建并运行 Face Lab，然后说明运行结果。
+
+## 贡献
+
+欢迎通过 [Issues](https://github.com/shanezchang/watchface-lab/issues) 报告问题或提出功能建议。遇到构建或显示问题时，请附上仓库版本、Xcode 与 watchOS 版本、机型或模拟器、复现步骤和相关错误。提交 [Pull Request](https://github.com/shanezchang/watchface-lab/pulls) 时，请说明变更影响了哪段使用流程及如何检查。
+
+## 许可与致谢
+
+Face Lab 派生自 Jinwoo Kim（`pookjw`）的 Clocky 1.1.2，基于提交 `88be58720bd0c60f64a6e8265c933b4a0c39d2bb`。Clocky 将应用内表盘方案的创意归功于 `mightywhite`。 [上游项目与原始署名](https://github.com/pookjw/Clocky/blob/88be58720bd0c60f64a6e8265c933b4a0c39d2bb/README.md)
+
+项目沿用 GNU General Public License v3.0。Apple Watch 和相关表盘标识归各权利人所有。 [LICENSE](LICENSE)
