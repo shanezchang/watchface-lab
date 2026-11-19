@@ -62,6 +62,6 @@ Face Lab 的浏览和显示都发生在应用内。Apple Watch 的系统表盘�
 
 ## 许可与致谢
 
-Face Lab 派生自 Jinwoo Kim（`pookjw`）的 Clocky 1.1.2，基于提交 `88be58720bd0c60f64a6e8265c933b4a0c39d2bb`。Clocky 将应用内表盘方案的创意归功于 `mightywhite`。 [上游项目与原始署名](https://github.com/pookjw/Clocky/blob/88be58720bd0c60f64a6e8265c933b4a0c39d2bb/README.md)
+Face Lab 源自 Jinwoo Kim（`pookjw`）的 Clocky。感谢 `mightywhite` 提出在应用内显示表盘的方案。 [Clocky](https://github.com/pookjw/Clocky)
 
 项目沿用 GNU General Public License v3.0。Apple Watch 和相关表盘标识归各权利人所有。 [LICENSE](LICENSE)
