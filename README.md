@@ -1,6 +1,6 @@
 # Watch Face Lab
 
-<img src="Clocky/Assets.xcassets/AppIcon.appiconset/FaceLab.png" alt="Face Lab 图标" width="80">
+<img src="Clocky/Assets.xcassets/AppIcon.appiconset/FaceLab-Plates.png" alt="Face Lab 图标" width="80">
 
 Face Lab 是一个 watchOS 表盘显示实验。打开应用会全屏显示手表已有的表盘，默认是黑底橙字的 Hermès 款，长按可选其他款。选择保存在应用自己的偏好中。
 
@@ -49,7 +49,7 @@ xcrun devicectl device process launch --device "$watch_id" "$bundle"
 ## 已验证环境
 
 - Xcode 27.2，Series 7 模拟器，watchOS 26.5。首次启动显示黑底橙字款，UI 测试通过长按、进入 Hermès 分类及选择表盘。用相同包名从 Clocky 原型更新到 Face Lab 后，已保存的选择仍可读取和显示。
-- Xcode 27.2，Series 7 真机，watchOS 26.6。Face Lab 1.0（构建 2）通过 `arm64_32` 构建和开发签名，按同一包名更新到手表。真机确认应用列表中的橙针图标与打开后的表盘都正常显示。
+- Xcode 27.2，Series 7 真机，watchOS 26.6。Face Lab 1.0（构建 3）通过 `arm64_32` 构建和开发签名，按同一包名更新到手表。设备确认新版已安装并启动，应用内表盘已在同一台手表上完成显示验证。
 
 ## 源码与许可
 
